@@ -73,17 +73,21 @@ def extrack_skrt_words(text: str) -> List[str]:
 
 
 def main():
+    line_delimiter = "\n"
     print("[INFO]: Extracking Sankrit words...")
     text_path = Path("./sanskrit_text")
     skrt_words_fn = text_path / "skrt_words.txt"
-    skrt_words = []
+    all_skrt_words = []
     for fn in text_path.iterdir():
-        for line in fn.read_text().splitlines():
-            skrt_words += extrack_skrt_words(line)
+        print(f"\t- processing {fn.name}...")
+        for n_line, line in enumerate(fn.read_text().splitlines()):
+            skrt_words = extrack_skrt_words(line)
+            if not skrt_words:
+                continue
+            all_skrt_words += skrt_words + [str(n_line + 1), line_delimiter]
+        skrt_words_fn = text_path / f"{fn.stem}_words.txt"
+        skrt_words_fn.write_text("\n".join(all_skrt_words))
         break
-    skrt_words_fn.write_text("\n".join(skrt_words))
-    print(f"[INFO] {len(skrt_words)} Sanskrit words found")
-    print("[INFO] saved at {skrt_words_fn}")
 
 
 if __name__ == "__main__":

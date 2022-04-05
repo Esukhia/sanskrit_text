@@ -73,7 +73,7 @@ def extrack_skrt_words(text: str) -> List[str]:
 
 
 def main():
-    line_delimiter = "\n"
+    line_delimiter = "----"
     print("[INFO]: Extracking Sankrit words...")
     text_path = Path("./sanskrit_text")
     skrt_words_fn = text_path / "skrt_words.txt"

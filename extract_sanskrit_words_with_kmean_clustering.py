@@ -36,28 +36,30 @@ def syls_to_skrt_vectors(syls: List[str]):
     return skrt_vectors, skrt_vector_idx_to_syls_idx
 
 
-def find_skrt_cluster_with_kmean(X):
+def find_skrt_clusters_with_kmean(X):
     kmeans = KMeans(n_clusters=2, random_state=0).fit(X)
     return list(kmeans.labels_)
 
 
-def find_skrt_cluster_with_agglo(X):
+def find_skrt_clusters_with_agglo(X):
     clustering = AgglomerativeClustering()
     clustering.fit(X)
     return list(clustering.labels_)
 
 
-def convert_cluster_to_skrt_words(
-    syls: List[str], labels: List[int], mapping: Dict[int, int]
+def convert_clusters_to_skrt_words(
+    syls: List[str], clusters: List[int], mapping: Dict[int, int]
 ) -> List[str]:
-    reversed_lables = labels[::-1]
+    reversed_clusters = clusters[::-1]
     skrt_words_span = []
-    syl_idx = 0
-    while syl_idx <= len(labels) - 1:
-        label = labels[syl_idx]
-        label_end_idx = (len(labels) - 1) - reversed_lables.index(label)
-        skrt_words_span.append((mapping[syl_idx], mapping[label_end_idx]))
-        syl_idx = label_end_idx + 1
+    cluster_idx = 0
+    while cluster_idx <= len(clusters) - 1:
+        cluster = clusters[cluster_idx]
+        cluster_end_idx = (len(clusters) - 1) - reversed_clusters.index(cluster)
+        skrt_words_span.append(
+            (mapping[cluster_idx], mapping[cluster_end_idx])
+        )
+        cluster_idx = cluster_end_idx + 1
 
     return ["".join(syls[start : end + 1]) for start, end in skrt_words_span]
 
@@ -67,8 +69,8 @@ def extrack_skrt_words(text: str) -> List[str]:
     skrt_syls_vectors, vec_idx2syl_idx = syls_to_skrt_vectors(syls)
     if len(skrt_syls_vectors) < 2:
         return []
-    labels = find_skrt_cluster_with_kmean(skrt_syls_vectors)
-    skrt_words = convert_cluster_to_skrt_words(syls, labels, vec_idx2syl_idx)
+    clusters = find_skrt_clusters_with_kmean(skrt_syls_vectors)
+    skrt_words = convert_clusters_to_skrt_words(syls, clusters, vec_idx2syl_idx)
     return skrt_words
 
 

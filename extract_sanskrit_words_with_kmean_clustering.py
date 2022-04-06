@@ -78,6 +78,7 @@ def main():
     line_delimiter = "----"
     print("[INFO]: Extracking Sankrit words...")
     text_path = Path("./sanskrit_text")
+    word_path = Path("./sanskrit_words")
     skrt_words_fn = text_path / "skrt_words.txt"
     all_skrt_words = []
     for fn in text_path.iterdir():
@@ -87,9 +88,9 @@ def main():
             if not skrt_words:
                 continue
             all_skrt_words += skrt_words + [str(n_line + 1), line_delimiter]
-        skrt_words_fn = text_path / f"{fn.stem}_words.txt"
+        skrt_words_fn = word_path / f"{fn.stem}_words.txt"
         skrt_words_fn.write_text("\n".join(all_skrt_words))
-        break
+        # break
 
 
 if __name__ == "__main__":

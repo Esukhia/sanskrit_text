@@ -80,8 +80,8 @@ def main():
     text_path = Path("./sanskrit_text")
     word_path = Path("./sanskrit_words")
     skrt_words_fn = text_path / "skrt_words.txt"
-    all_skrt_words = []
-    for fn in text_path.iterdir():
+    for fn in sorted(text_path.iterdir()):
+        all_skrt_words = []
         print(f"\t- processing {fn.name}...")
         for n_line, line in enumerate(fn.read_text().splitlines()):
             skrt_words = extrack_skrt_words(line)
